@@ -44,7 +44,7 @@ CRE_SI_NUMBER = re.compile(r'\s*(?P<sign>[\+\-])?'
                            u'(?P<si_unit>[%s])?\s*' % SI_PREFIX_UNITS)
 
 
-def split(value, precision=1):
+def split(value):
     '''
     Split `value` into value and "exponent-of-10", where "exponent-of-10" is a
     multiple of 3.  This corresponds to SI prefixes.
@@ -56,8 +56,6 @@ def split(value, precision=1):
     ----
     value : int, float
         Input value.
-    precision : int
-        Number of digits after decimal place to include.
 
     Returns
     -------
@@ -76,7 +74,6 @@ def split(value, precision=1):
     See :func:`si_format` for more examples.
     '''
     negative = False
-    digits = precision + 1
 
     if value < 0.:
         value = -value
@@ -95,10 +92,6 @@ def split(value, precision=1):
     if value >= 1000.:
         value /= 1000.0
         expof10 += 3
-    elif value >= 100.0:
-        digits -= 2
-    elif value >= 10.0:
-        digits -= 1
 
     if negative:
         value *= -1
@@ -125,8 +118,8 @@ def prefix(expof10):
     return SI_PREFIX_UNITS[si_level + prefix_levels]
 
 
-def si_format(value, precision=1, format_str=u'{value} {prefix}',
-              exp_format_str=u'{value}e{expof10}'):
+def si_format(value, format_str=u'{value:.1f} {prefix}',
+              exp_format_str=u'{value:.1f}e{expof10}'):
     '''
     Format value to string with SI prefix, using the specified precision.
 
@@ -134,8 +127,6 @@ def si_format(value, precision=1, format_str=u'{value} {prefix}',
     ----------
     value : int, float
         Input value.
-    precision : int
-        Number of digits after decimal place to include.
     format_str : str or unicode
         Format string where ``{prefix}`` and ``{value}`` represent the SI
         prefix and the value (scaled according to the prefix), respectively.
@@ -154,7 +145,7 @@ def si_format(value, precision=1, format_str=u'{value} {prefix}',
     Examples
     --------
 
-    For example, with `precision=2`:
+    For example, with value formmated with two decimal places ('{value:.2d}'):
 
     .. code-block:: python
 
@@ -207,11 +198,9 @@ def si_format(value, precision=1, format_str=u'{value} {prefix}',
     .. _SI prefix style:
         http://physics.nist.gov/cuu/Units/checklist.html
     '''
-    svalue, expof10 = split(value, precision)
-    value_format = u'%%.%df' % precision
-    value_str = value_format % svalue
+    svalue, expof10 = split(value)
     try:
-        return format_str.format(value=value_str,
+        return format_str.format(value=svalue, 
                                  prefix=prefix(expof10).strip())
     except ValueError:
         sign = ''
