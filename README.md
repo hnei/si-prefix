@@ -6,17 +6,14 @@ Example usage:
 
     from si_prefix import si_format
 
-    print si_format(.5)
-    # 500.0 m  (default precision is 1)
-
-    print si_format(.01331, precision=2)
+    print(si_format(.01331))
     # 13.31 m
 
-    print si_format(1331, precision=2)
+    print(si_format(1331))
     # 1.33 k
 
-    print si_format(1331, precision=0)
-    # 1 k
+    print(si_format(1331, format_str='{value:.1f} {prefix}')) # Reduce to 1 decimal place
+    # 1.3 k
 
 # Changelog #
 
@@ -33,7 +30,7 @@ Example usage:
 
 # Credits #
 
-Written by Christian Fobel <christian@fobel.net>  
+Written by Christian Fobel <christian@fobel.net>
 
 Ported from [C version][1] written by Jukka “Yucca” Korpela
 <jkorpela@cs.tut.fi>.
