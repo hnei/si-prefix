@@ -16,4 +16,4 @@ setup(name='si-prefix',
       author_email='christian@fobel.net',
       url='https://github.com/cfobel/si-prefix',
       license='BSD-3',
-      packages=['si_prefix', 'si_prefix.tests'])
+      packages=['si_prefix'])

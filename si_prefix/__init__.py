@@ -3,6 +3,7 @@ from __future__ import division
 import math
 import re
 
+# Version (must comment this out to run doctest)
 from ._version import get_versions
 __version__ = get_versions()['version']
 del get_versions
@@ -66,10 +67,10 @@ def split(value):
     Examples
     --------
 
-    .. code-block:: python
-
-        si_prefix.split(0.04781)   ->  (47.8, -3)
-        si_prefix.split(4781.123)  ->  (4.8, 3)
+    >>> split(0.04781)
+    (47.809999999999995, -3)
+    >>> split(4781.123)
+    (4.781123, 3)
 
     See :func:`si_format` for more examples.
     '''
@@ -118,8 +119,8 @@ def prefix(expof10):
     return SI_PREFIX_UNITS[si_level + prefix_levels]
 
 
-def si_format(value, format_str=u'{value:.1f} {prefix}',
-              exp_format_str=u'{value:.1f}e{expof10}'):
+def si_format(value, format_str=u'{value:.2f} {prefix}',
+              exp_format_str=u'{value:.2f}e{expof10}'):
     '''
     Format value to string with SI prefix, using the specified precision.
 
@@ -145,45 +146,74 @@ def si_format(value, format_str=u'{value:.1f} {prefix}',
     Examples
     --------
 
-    For example, with value formmated with two decimal places ('{value:.2d}'):
-
-    .. code-block:: python
-
-        1e-27 --> 1.00e-27
-        1.764e-24 --> 1.76 y
-        7.4088e-23 --> 74.09 y
-        3.1117e-21 --> 3.11 z
-        1.30691e-19 --> 130.69 z
-        5.48903e-18 --> 5.49 a
-        2.30539e-16 --> 230.54 a
-        9.68265e-15 --> 9.68 f
-        4.06671e-13 --> 406.67 f
-        1.70802e-11 --> 17.08 p
-        7.17368e-10 --> 717.37 p
-        3.01295e-08 --> 30.13 n
-        1.26544e-06 --> 1.27 u
-        5.31484e-05 --> 53.15 u
-        0.00223223 --> 2.23 m
-        0.0937537 --> 93.75 m
-        3.93766 --> 3.94
-        165.382 --> 165.38
-        6946.03 --> 6.95 k
-        291733 --> 291.73 k
-        1.22528e+07 --> 12.25 M
-        5.14617e+08 --> 514.62 M
-        2.16139e+10 --> 21.61 G
-        9.07785e+11 --> 907.78 G
-        3.8127e+13 --> 38.13 T
-        1.60133e+15 --> 1.60 P
-        6.7256e+16 --> 67.26 P
-        2.82475e+18 --> 2.82 E
-        1.1864e+20 --> 118.64 E
-        4.98286e+21 --> 4.98 Z
-        2.0928e+23 --> 209.28 Z
-        8.78977e+24 --> 8.79 Y
-        3.6917e+26 --> 369.17 Y
-        1.55051e+28 --> 15.51e+27
-        6.51216e+29 --> 651.22e+27
+    >>> si_format(1e-27)
+    '1.00e-27'
+    >>> si_format(1.764e-24)
+    '1.76 y'
+    >>> si_format(7.4088e-23)
+    '74.09 y'
+    >>> si_format(3.1117e-21)
+    '3.11 z'
+    >>> si_format(1.30691e-19)
+    '130.69 z'
+    >>> si_format(5.48903e-18)
+    '5.49 a'
+    >>> si_format(2.30539e-16)
+    '230.54 a'
+    >>> si_format(9.68265e-15)
+    '9.68 f'
+    >>> si_format(4.06671e-13)
+    '406.67 f'
+    >>> si_format(1.70802e-11)
+    '17.08 p'
+    >>> si_format(7.17368e-10)
+    '717.37 p'
+    >>> si_format(3.01295e-08)
+    '30.13 n'
+    >>> si_format(1.26544e-06)
+    '1.27 µ'
+    >>> si_format(5.31484e-05)
+    '53.15 µ'
+    >>> si_format(0.00223223)
+    '2.23 m'
+    >>> si_format(0.0937537)
+    '93.75 m'
+    >>> si_format(3.93766)
+    '3.94 '
+    >>> si_format(165.382)
+    '165.38 '
+    >>> si_format(6946.03)
+    '6.95 k'
+    >>> si_format(291733)
+    '291.73 k'
+    >>> si_format(1.22528e+07)
+    '12.25 M'
+    >>> si_format(5.14617e+08)
+    '514.62 M'
+    >>> si_format(2.16139e+10)
+    '21.61 G'
+    >>> si_format(3.8127e+13)
+    '38.13 T'
+    >>> si_format(1.60133e+15)
+    '1.60 P'
+    >>> si_format(6.7256e+16)
+    '67.26 P'
+    >>> si_format(2.82475e+18)
+    '2.82 E'
+    >>> si_format(1.1864e+20)
+    '118.64 E'
+    >>> si_format(4.98286e+21)
+    '4.98 Z'
+    >>> si_format(2.0928e+23)
+    '209.28 Z'
+    >>> si_format(8.78977e+24)
+    '8.79 Y'
+    >>> si_format(3.6917e+26)
+    '369.17 Y'
+    >>> si_format(1.55051e+28)
+    '15.51e+27'
+    >>> si_format(6.51216e+29)
+    '651.22e+27'
 
     .. versionchanged:: 1.0
         Use unicode string for :data:`format_str` and SI value format string to
@@ -206,7 +236,7 @@ def si_format(value, format_str=u'{value:.1f} {prefix}',
         sign = ''
         if expof10 > 0:
             sign = "+"
-        return exp_format_str.format(value=value_str,
+        return exp_format_str.format(value=svalue,
                                      expof10=''.join([sign, str(expof10)]))
 
 
@@ -282,3 +312,7 @@ def si_prefix_expof10(si_unit):
     '''
     prefix_levels = (len(SI_PREFIX_UNITS) - 1) // 2
     return (3 * (SI_PREFIX_UNITS.index(si_unit) - prefix_levels))
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
