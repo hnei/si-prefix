@@ -1,6 +1,7 @@
+#!/usr/bin/env python3
 # coding: utf-8
 from __future__ import division
-import math
+from math import log10
 import re
 
 # Version (must comment this out to run doctest)
@@ -82,10 +83,10 @@ def split(value):
     elif value == 0.:
         return 0., 0
 
-    expof10 = int(math.log10(value))
+    expof10 = int(log10(value))
     if expof10 > 0:
         expof10 = (expof10 // 3) * 3
-    else:
+    elif expof10 < 0:
         expof10 = (-expof10 + 3) // 3 * (-3)
 
     value *= 10 ** (-expof10)
@@ -94,10 +95,7 @@ def split(value):
         value /= 1000.0
         expof10 += 3
 
-    if negative:
-        value *= -1
-
-    return value, int(expof10)
+    return -value if negative else value, int(expof10)
 
 
 def prefix(expof10):
@@ -228,17 +226,12 @@ def si_format(value, format_str=u'{value:.2f} {prefix}',
     .. _SI prefix style:
         http://physics.nist.gov/cuu/Units/checklist.html
     '''
-    svalue, expof10 = split(value)
+    value, expof10 = split(value)
     try:
-        return format_str.format(value=svalue, 
-                                 prefix=prefix(expof10).strip())
+        return format_str.format(value=value, prefix=prefix(expof10).rstrip())
     except ValueError:
-        sign = ''
-        if expof10 > 0:
-            sign = "+"
-        return exp_format_str.format(value=svalue,
-                                     expof10=''.join([sign, str(expof10)]))
-
+        sign = '+' if expof10 > 0 else ''
+        return exp_format_str.format(value=value, expof10=sign + str(expof10))
 
 def si_parse(value):
     '''
